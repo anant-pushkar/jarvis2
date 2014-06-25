@@ -31,7 +31,7 @@ class JarvisProjectInterpreter(jarvis.JarvisInterpreter):
 		
 		def build_project(arg):
 			self.project.build()
-		self.add_trigger("build" , build_project)
+		self.add_trigger("build" , build_project , is_child=False)
 		
 		def test_project(arg):
 			if "tester" in sys.modules.keys():
