@@ -26,7 +26,13 @@ The commands used in project terminal are as follows:
 | ------------- |:---------------------------------------------------------:| 
 | build         | Used to build project. Runs scripts from scripts/buildfile| 
 | run           | Used to run. Runs scripts from scripts/runfile            | 
+| debug         | Used to debug. Runs scripts from scripts/debugfile        | 
 | test          | Used to run test suits form jarvis/testCases.py           | 
 
-For more instructions, refer to wiki.
+For more instructions, refer to wiki (to be updated soon).
 Contact the author at anantpushkar009@gmail.com
+
+TODO:
+1.open_project opens anything starting with "main" right now. Make that more intelligent.
+2.Add default filters in installer.
+3.Complete wiki.
