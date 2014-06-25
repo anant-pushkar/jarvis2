@@ -1,0 +1,20 @@
+#!/usr/bin/python
+import sys
+import os
+
+print os.getcwd()
+
+home = os.getenv("HOME")
+sys.path.insert(0 , home + "/.jarvis")
+if os.path.isdir(os.getcwd() + "/jarvis"):
+	sys.path.insert(0 , os.getcwd() + "/jarvis")
+	import interpreter
+	import project
+	
+	prj = project.JarvisProject("project.json")
+	inter = interpreter.Interpreter(prj)
+else:
+	import admin_interpreter
+	inter = admin_interpreter.JarvisAdminInterpreter()
+
+inter.start()

@@ -1,0 +1,8 @@
+{
+	"name" 			: "{name}",
+	"description"	: "{comments}",
+	"buildfile"		: "buildfile",
+	"runfile"		: "runfile",
+	"debugfile"		: "debugfile",
+	"type"			: "cpp"
+}
