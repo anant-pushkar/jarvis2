@@ -1,5 +1,6 @@
 {
 	"name"  : "filter1",
 	"run"   : "python test/filter1/filter.py",
-	"build" : ""
+	"build" : "",
+	"dependency"	: ["python-matplotlib","python-networkx"]
 }

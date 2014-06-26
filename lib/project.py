@@ -16,6 +16,26 @@ class JarvisProject:
 		self.runfile		= str(jObject["runfile"])
 		self.debugfile		= str(jObject["debugfile"])
 		self.set_verbose	= False
+		self.dependency_set	= utils.DependencySet(jObject["dependency"] if "dependency" in jObject.keys() else [])
+		self.warn_for_dependency()
+	
+	def warn_for_dependency(self):
+		unmet = self.dependency_set.get_unmet_list()
+		if len(unmet)!=0:
+			print utils.get_color("red") + "The following dependencies seem to be unmet. You better make sure these are installed before building the project" + utils.reset_color()
+			for dependency in unmet:
+				print utils.get_color("yellow") + dependency + utils.reset_color()
+			print utils.get_color("blue") + "Or you could simply use install_dependency command otherwise" + utils.reset_color()
+			return False
+		return True
+	
+	def install_dependency(self):
+		unmet = self.dependency_set.get_unmet_list()
+		if len(unmet)!=0:
+			print utils.get_color("cyan") + "Installing : " + " ".join(unmet) + utils.reset_color()
+			self.dependency_set.install_unmet()
+		else:
+			print utils.get_color("cyan") + "Nothing to install" + utils.reset_color()
 	
 	def printInfo(self):
 		print "Project Name : " + self.name
@@ -25,6 +45,7 @@ class JarvisProject:
 		print "Run File   : " + self.runfile
 	
 	def build(self):
+		self.warn_for_dependency()
 		print utils.get_color("blue" , -1 , "b") + "Building Project...\n" + utils.reset_color()
 		try:
 			utils.run_script("scripts/" + self.buildfile , verbose = self.set_verbose)

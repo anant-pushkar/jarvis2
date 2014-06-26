@@ -3,6 +3,32 @@ import time
 import sys
 import subprocess
 
+class DependencyChecker:
+	def __init__(self,libname):
+		self.libname = libname
+		self.get_info()
+	
+	def get_info(self):
+		try:
+			dpkg_output = subprocess.check_output(['dpkg', '-s', self.libname])
+			self.is_installed = "Package: "+self.libname+"\nStatus: install ok installed" in dpkg_output
+		except:
+			self.is_installed = False
+	
+class DependencySet:
+	def __init__(self,dependency_list):
+		self.dependency_list = []
+		for dependency in dependency_list:
+			self.dependency_list.append(DependencyChecker(dependency))
+	
+	def get_unmet_list(self):
+		return [dependency.libname for dependency in self.dependency_list if not dependency.is_installed]
+	
+	def install_unmet(self):
+		unmet = self.get_unmet_list()
+		print "running","sudo apt-get install "+" ".join(unmet)
+		os.system("sudo apt-get install "+" ".join(unmet))
+
 def sanitise(content,data):	
 	import time
 	content=content.replace("{date}",time.strftime("%c"))

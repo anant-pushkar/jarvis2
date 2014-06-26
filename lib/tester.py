@@ -17,6 +17,17 @@ class JarvisFilter:
 		self.name  = str(jObject["name"])
 		self.build_script = str(jObject["build"])
 		self.run_script   = str(jObject["run"])
+		self.dependency_set	= utils.DependencySet(jObject["dependency"] if "dependency" in jObject.keys() else [])
+		self.warn_for_dependency()
+	
+	def warn_for_dependency(self):
+		unmet = self.dependency_set.get_unmet_list()
+		if len(unmet)!=0:
+			print utils.get_color("red") + "The following dependencies for filter:'"+self.name+"' seem to be unmet. You better make sure these are installed before testing the project" + utils.reset_color()
+			for dependency in unmet:
+				print utils.get_color("yellow") + dependency + utils.reset_color()
+			return False
+		return True
 	
 	def build(self):
 		os.system(self.build_script)

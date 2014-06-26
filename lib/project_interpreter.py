@@ -41,6 +41,10 @@ class JarvisProjectInterpreter(jarvis.JarvisInterpreter):
 			jarvistester.test()
 		self.add_trigger("test" , test_project)
 		
+		def install_dependency(arg):
+			self.project.install_dependency()
+		self.add_trigger("install_dependency",install_dependency)
+		
 		def add_module(arg):
 			fptr = open(os.getcwd() + "/project.json")
 			j = json.load(fptr)
