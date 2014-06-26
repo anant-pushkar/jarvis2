@@ -5,11 +5,20 @@ import importlib
 import os
 import utils
 import json
+import mimetypes
 
 class JarvisAdminInterpreter(jarvis.JarvisInterpreter):
 	def __init__(self):
 		jarvis.JarvisInterpreter.__init__(self)
 		self.add_admin_triggers()
+	
+	def is_text(self,filename):
+		tp = mimetypes.guess_type(filename)
+		print tp
+		try:
+			return "text/" in tp[0]
+		except:
+			return False
 	
 	def add_admin_triggers(self):
 		def create_project(arg):
@@ -74,7 +83,7 @@ class JarvisAdminInterpreter(jarvis.JarvisInterpreter):
 			
 			os.chdir(project_folder)
 			os.system("gnome-terminal -e jarvis &")
-			cmd=str(j["editor"])+" " + " ".join(mainfiles)+" &"
+			cmd=str(j["editor"])+" " + " ".join([filename for filename in mainfiles if self.is_text(filename)])+" &"
 			os.system(cmd)
 		
 		self.add_trigger("create_project" , create_project)
@@ -110,6 +119,7 @@ class JarvisAdminInterpreter(jarvis.JarvisInterpreter):
 			f.close()
 			project_folder = os.getenv("HOME") + "/" + str(j["workspace"]) + "/" + tp 
 			project_list   = os.listdir(project_folder)
+			project_list.sort()
 			
 			print utils.get_color("cyan") + "Select project : " + utils.reset_color()
 			for prj in project_list:
@@ -148,9 +158,10 @@ class JarvisAdminInterpreter(jarvis.JarvisInterpreter):
 					mainfiles.append(fname)
 			os.chdir(project_folder)
 			os.system("gnome-terminal -e jarvis &")
-			cmd=str(j["editor"])+" " + " ".join(mainfiles)+" &"
+			cmd=str(j["editor"])+" " + " ".join([filename for filename in mainfiles if self.is_text(filename)])+" &"
 			os.system(cmd)
 		
 		self.add_trigger("open_project",open_project)
 			
 		
+
