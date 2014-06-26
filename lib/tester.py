@@ -98,7 +98,7 @@ class JarvisTester:
 		if(e_list[0] == "?"):
 			print "Showing output for " + instance.description
 			print utils.get_color("yellow")
-			if e_list[2] != "false" : 
+			if len(e_list)>2 and e_list[2] != "false" : 
 				print "input : " 
 				print instance.inputStr
 			print "output : "
@@ -111,7 +111,9 @@ class JarvisTester:
 			return index
 		for i in range(len(e_list)):
 			exp = e_list[i]
-			if index >= len(o_str):
+			if exp=="":
+				continue
+			if index >= len(o_str) :
 				self.throw_eof(i , e_list[i],instance)
 			if not instance.test(o_str[index] , exp):
 				print utils.get_color("red") 
