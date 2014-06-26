@@ -33,7 +33,5 @@ For more instructions, refer to wiki (to be updated soon).
 Contact the author at anantpushkar009@gmail.com
 
 TODO:
--   open_project opens anything starting with "main" right now. Make that more intelligent.
 -   Change run_script from utils to allow shared environment in script
--   Add default filters in installer.
 -   Complete wiki.
