@@ -1,14 +1,11 @@
-This filter extracts json objects from the stdout stream of the projectstarting with^ (so, for a json object to be extracted ,
-it should be encapsulated in ^{} and not {}) and plots the data within using matplotlib library.Check the sample input format provided
-for exact format of jason expected.
+This filter extracts json objects from the stdout stream of the project starting with a '^' (so, for a json object to be extracted ,it should be encapsulated in ^{} and not {}) and plots the data within using matplotlib library.Check the sample input format provided for exact format of jason expected.
 
-Please ensure that the following dependencies have been correctly installed before using this filter
+Please ensure that the dependencies have been correctly installed before using this filter.
 
 Instructions to install filter to the project:
 1. Create a folder in te test directory of the project and name it anything(say, filter1)
 2. copy config.json , and filter.py to this folder
-3. open filters.json in the test directory and add the foldername (filter1 for example)
-   into the list attribute of the json object.
+3. open filters.json in the test directory and add the foldername (filter1 for example) into the list attribute of the json object.
 
 NOTE: The order in which the folder names occur in the list attribute is same as the order in which they will be applied to the output stream.
 
