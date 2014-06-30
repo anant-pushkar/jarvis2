@@ -1,6 +1,7 @@
 import sys
 import networkx as nx
 import matplotlib.pyplot as plt
+from scipy import interpolate
 import numpy as np
 import json
 import os
@@ -55,12 +56,18 @@ def draw_graph(count,graph,is_directed, labels=None,ttl="Graph Viewer", graph_la
     ax=f.add_subplot(111)
     ax.plot()
 
-def data_plot(count,arr,labels,xLabel="",ttl="Data Plotter"):
+def data_plot(count,arr,labels,xLabel="",ttl="Data Plotter",smooth=False):
 	f=plt.figure()
 	pl=[]
 	for i in range(len(arr)):
 		a=arr[i]
+		if smooth:
+			xnew = np.arange(0,len(a)-1,0.1)
+			x    = np.arange(0,len(a))
+			f    = interpolate.interp1d(x, a)
+			a    = f(xnew) 
 		xs = np.arange(len(a))
+		
 		series1 = np.array(a).astype(np.double)
 		s1mask = np.isfinite(series1)
 
@@ -120,8 +127,9 @@ def filter_input(line,count):
 				b.append(float(a))
 			arr.append(b)
 			labels.append(j["labels"][i])
+			smooth = j["smooth"] if "smooth" in j.keys() else False
 		try:
-			data_plot(count,arr,labels,str(j["xLabel"]),str(j["name"]))
+			data_plot(count,arr,labels,str(j["xLabel"]),str(j["name"]),smooth=smooth)
 		except:
 		   print line.replace('\n','')
 
@@ -133,4 +141,5 @@ for line in sys.stdin:
 		print line.replace('\n','')
 
 plt.show()	
+
 
