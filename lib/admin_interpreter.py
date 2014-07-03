@@ -169,7 +169,7 @@ class JarvisAdminInterpreter(jarvis.JarvisInterpreter):
 			
 			print utils.get_color("blue") + "Installing updates" + utils.reset_color()
 			os.chdir("jarvis2")
-			os.system("bash install.sh")
+			os.system("bash update.sh")
 			
 			print utils.get_color("blue") + "Cleaning Repository" + utils.reset_color()
 			os.chdir("..")
