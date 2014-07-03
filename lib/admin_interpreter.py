@@ -164,6 +164,9 @@ class JarvisAdminInterpreter(jarvis.JarvisInterpreter):
 		self.add_trigger("open_project",open_project,help_text="Open Existing project")
 		
 		def update(arg):
+			os.system("mkdir -p .jarvis_update_repo")
+			os.chdir(".jarvis_update_repo")
+			
 			print utils.get_color("blue") + "Cloning Repository in current directory" + utils.reset_color()
 			os.system("git clone https://github.com/anant-pushkar/jarvis2.git")
 			
@@ -172,7 +175,7 @@ class JarvisAdminInterpreter(jarvis.JarvisInterpreter):
 			os.system("bash update.sh")
 			
 			print utils.get_color("blue") + "Cleaning Repository" + utils.reset_color()
-			os.chdir("..")
+			os.chdir("../..")
 			os.system("rm -r jarvis2")
 			
 		self.add_trigger("update",update,help_text="Update Jarvis")
