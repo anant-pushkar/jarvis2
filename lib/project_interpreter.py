@@ -21,17 +21,17 @@ class JarvisProjectInterpreter(jarvis.JarvisInterpreter):
 			sin = 0 if len(arg)<1 else arg[0]
 			sout= 0 if len(arg)<2 else arg[1]
 			self.project.run(sin , sout)
-		self.add_trigger("run" , run_project)
+		self.add_trigger("run" , run_project , help_text="Run the current project")
 		
 		def debug_project(arg):
 			sin = 0 if len(arg)<1 else arg[0	]
 			sout= 0 if len(arg)<2 else arg[1]
 			self.project.debug(sin , sout)
-		self.add_trigger("debug" , debug_project)
+		self.add_trigger("debug" , debug_project , help_text="Run project in debug mode")
 		
 		def build_project(arg):
 			self.project.build()
-		self.add_trigger("build" , build_project , is_child=False)
+		self.add_trigger("build" , build_project , is_child=False , help_text="Build Project")
 		
 		def test_project(arg):
 			if "tester" in sys.modules.keys():
@@ -39,11 +39,11 @@ class JarvisProjectInterpreter(jarvis.JarvisInterpreter):
 			tester = importlib.import_module("tester")
 			jarvistester = tester.JarvisTester(self.project)
 			jarvistester.test()
-		self.add_trigger("test" , test_project)
+		self.add_trigger("test" , test_project , help_text="Test Project")
 		
 		def install_dependency(arg):
 			self.project.install_dependency()
-		self.add_trigger("install_dependency",install_dependency)
+		self.add_trigger("install_dependency",install_dependency , help_text="Install Dependencies")
 		
 		def add_module(arg):
 			fptr = open(os.getcwd() + "/project.json")
@@ -87,5 +87,5 @@ class JarvisProjectInterpreter(jarvis.JarvisInterpreter):
 					fptr.close()
 			print utils.get_color("green") + "Module Added" + utils.reset_color()
 			
-		self.add_trigger("add_module",add_module)
+		self.add_trigger("add_module",add_module , help_text="Add new modules using pre-defined templates")
 

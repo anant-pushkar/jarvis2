@@ -86,7 +86,7 @@ class JarvisAdminInterpreter(jarvis.JarvisInterpreter):
 			cmd=str(j["editor"])+" " + " ".join([filename for filename in mainfiles if self.is_text(filename)])+" &"
 			os.system(cmd)
 		
-		self.add_trigger("create_project" , create_project)
+		self.add_trigger("create_project" , create_project , help_text="Create a new project")
 		
 		def open_project(arg):
 			import readline
@@ -161,7 +161,7 @@ class JarvisAdminInterpreter(jarvis.JarvisInterpreter):
 			cmd=str(j["editor"])+" " + " ".join([filename for filename in mainfiles if self.is_text(filename)])+" &"
 			os.system(cmd)
 		
-		self.add_trigger("open_project",open_project)
+		self.add_trigger("open_project",open_project,help_text="Open Existing project")
 		
 		def update(arg):
 			print utils.get_color("blue") + "Cloning Repository in current directory" + utils.reset_color()
@@ -175,4 +175,4 @@ class JarvisAdminInterpreter(jarvis.JarvisInterpreter):
 			os.chdir("..")
 			os.system("rm -r jarvis2")
 			
-		self.add_trigger("update",update)
+		self.add_trigger("update",update,help_text="Update Jarvis")

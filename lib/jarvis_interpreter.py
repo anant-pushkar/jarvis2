@@ -13,11 +13,13 @@ class JarvisInterpreter:
 	def __init__(self):
 		os.system("clear")
 		self.trigger_list = []
-		self.triggers     = {}
+		self.triggers	  = {}
 		self.prompt		  = "Jarvis ~/ $ "
 		self.status 	  = False
 		self.stdinFD	  = sys.stdin.fileno()
+		self.trigger_helplist = []
 		self.is_child_trigger = {}
+		self.is_operation     = {}
 		self.init_triggers()
 	
 	def __del__(self):
@@ -48,24 +50,34 @@ class JarvisInterpreter:
 			return lambda x : os.system("cat " + f)
 		for f in files:
 			if not os.path.isdir(f):
-				self.add_trigger(f , get_cmd(f))
+				self.add_trigger(f , get_cmd(f) , is_operation=False)
 	
 	def init_triggers(self):
 		def exit_jarvis(arg):
 			print utils.get_color("blue") + "Exiting Jarvis. Have a good day!!!" + utils.reset_color()
 			self.__del__()
 			self.status = False
-		self.add_trigger("exit" , exit_jarvis,is_child=False)
+		self.add_trigger("exit" , exit_jarvis,is_child=False , help_text="Exit jarvis")
 		
 		def chdir(arg):
 			os.chdir(arg[0] if len(arg)>0 else os.getenv("HOME"))
-		self.add_trigger("cd" , chdir,is_child=False)
+		self.add_trigger("cd" , chdir,is_child=False , help_text="Change directory")
+		
+		self.add_trigger("help",self.print_help , help_text="Help command for command line interface")
 	
-	def add_trigger(self , name , proc , is_child=True):
+	def add_trigger(self , name , proc , is_child=True , help_text="" , is_operation=True):
 		if not self.triggers.has_key(name):
 			self.triggers[name] = proc
 			self.trigger_list.append(name)
+			self.trigger_helplist.append(help_text)
 			self.is_child_trigger[name] = is_child
+			self.is_operation[name] = is_operation
+	
+	def print_help(self,arg):
+		for i in range(len(self.trigger_list)):
+			if self.is_operation[self.trigger_list[i]]:
+				print utils.get_color("cyan") + self.trigger_list[i] + utils.reset_color()
+				print utils.get_color("yellow",attr="b") + self.trigger_helplist[i] + utils.reset_color() + "\n"
 	
 	def complete_type(self,text, state):
 		for cmd in self.trigger_list:
