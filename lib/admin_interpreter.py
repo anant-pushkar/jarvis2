@@ -176,6 +176,6 @@ class JarvisAdminInterpreter(jarvis.JarvisInterpreter):
 			
 			print utils.get_color("blue") + "Cleaning Repository" + utils.reset_color()
 			os.chdir("../..")
-			os.system("rm -r jarvis2")
+			os.system("rm -r .jarvis_update_repo")
 			
 		self.add_trigger("update",update,help_text="Update Jarvis")
