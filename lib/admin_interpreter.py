@@ -11,10 +11,12 @@ class JarvisAdminInterpreter(jarvis.JarvisInterpreter):
 	def __init__(self):
 		jarvis.JarvisInterpreter.__init__(self)
 		self.add_admin_triggers()
+		mimetypes.add_type('text/php_source_code','.php')
+		mimetypes.add_type('text/yaml_file','.yaml')
 	
 	def is_text(self,filename):
 		tp = mimetypes.guess_type(filename)
-		print tp
+		print filename , tp
 		try:
 			return "text/" in tp[0]
 		except:
@@ -69,16 +71,18 @@ class JarvisAdminInterpreter(jarvis.JarvisInterpreter):
 			os.system("cp -R " + type_folder + "/test "  + project_folder   )
 			
 			files = os.listdir(type_folder)
+			files = files + ["scripts/"+fname for fname in os.listdir(type_folder + "/scripts")]
 			mainfiles = []
 			for fname in files:
-				if fname.startswith("main") or fname=="project.json":
-					mainfiles.append(project_folder + "/" + fname)
+				path = project_folder + "/" + fname
+				if(os.path.isfile(type_folder + "/" + fname)):
+					mainfiles.append(path)
 					fptr = open(type_folder + "/" + fname)
 					content = fptr.read()
 					fptr.close()
 					print utils.get_color("blue") + "Creating " + fname + utils.reset_color()
-					fptr = open(project_folder + "/" + fname , "w")
-					fptr.write(utils.sanitise(content,{"name":name , "comments":cmt , "author":str(j["author"])}))
+					fptr = open(path , "w")
+					fptr.write(utils.sanitise(content,{"name":name , "comments":cmt , "author":str(j["author"]) , "workspace":str(j["workspace"])}))
 					fptr.close()
 			
 			os.chdir(project_folder)
