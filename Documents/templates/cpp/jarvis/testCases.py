@@ -14,7 +14,7 @@ def getTests():
 	
 	'''
 	suite=testTemplate.testSuite("Sample Test Suite1")
-	testcase = testTemplate.regexTester("3" , "30" , "sample")
+	testcase = testTemplate.testInstance("3" , "30" , "sample")
 	suite.add(testcase)
 	tests.append(suite)
 	'''
