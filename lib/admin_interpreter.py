@@ -95,7 +95,10 @@ class JarvisAdminInterpreter(jarvis.JarvisInterpreter):
 			
 			os.chdir(project_folder)
 			os.system("gnome-terminal -e jarvis &")
-			cmd=str(j["editor"])+" " + " ".join([filename for filename in mainfiles if self.is_text(filename)])+" &"
+			f=open(os.path.join(project_folder , "project.json"))
+			pj=json.load(f)
+			editor = str(pj["editor"]) if "editor" in pj else str(j["editor"])
+			cmd=editor+" " + " ".join([filename for filename in mainfiles if self.is_text(filename)])+" &"
 			os.system(cmd)
 		
 		self.add_trigger("create_project" , create_project , help_text="Create a new project")
@@ -170,7 +173,10 @@ class JarvisAdminInterpreter(jarvis.JarvisInterpreter):
 					mainfiles.append(path)
 			os.chdir(project_folder)
 			os.system("gnome-terminal -e jarvis &")
-			cmd=str(j["editor"])+" " + " ".join([filename for filename in mainfiles if self.is_text(filename)])+" &"
+			f=open(os.path.join(project_folder , "project.json"))
+			pj=json.load(f)
+			editor = str(pj["editor"]) if "editor" in pj else str(j["editor"])
+			cmd=editor+" " + " ".join([filename for filename in mainfiles if self.is_text(filename)])+" &"
 			os.system(cmd)
 		
 		self.add_trigger("open_project",open_project,help_text="Open Existing project")
