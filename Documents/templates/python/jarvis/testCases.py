@@ -1,7 +1,7 @@
 import testTemplate 
 '''
 
-class customTester(testInstance):
+class customTester(testTemplate.testInstance):
 	def __init__(self , inStr , outStr , dec):
 		testInstance.__init__(self , inStr , outStr , dec)
 	
