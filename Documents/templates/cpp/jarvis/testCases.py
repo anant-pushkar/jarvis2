@@ -3,7 +3,7 @@ import testTemplate
 
 class customTester(testTemplate.testInstance):
 	def __init__(self , inStr , outStr , dec):
-		testInstance.__init__(self , inStr , outStr , dec)
+		testTemplate.testInstance.__init__(self , inStr , outStr , dec)
 	
 	def test(self,txt,ref):
 		#write test logic here
