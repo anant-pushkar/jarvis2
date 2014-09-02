@@ -33,6 +33,3 @@ The commands used in project terminal are as follows:
 For more instructions, refer to wiki (to be updated soon).
 Contact the author at anantpushkar009@gmail.com
 
-TODO:
--   Change run_script from utils to allow shared environment in script
--   Complete wiki.
