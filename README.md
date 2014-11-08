@@ -5,8 +5,12 @@ Jarvis is a project management and unit testing framework. It can be customised 
 
 To install:
 ```bash
+sudo su
+pip install beautifulsoup4 google py-stackexchange 
+exit
 bash install.sh
 ```
+You will have to enter super user mode to install dependencies here.
 
 Start by typing jarvis on the terminal (you may have to add sudo here). This will open the admin shell. Following commands can now be used:
 
