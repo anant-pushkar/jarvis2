@@ -16,4 +16,7 @@ mkdir $HOME/jarvis_workspace/c
 mkdir $HOME/jarvis_workspace/cpp
 mkdir $HOME/jarvis_workspace/python
 
+echo "Installing dependencies"
+sudo pip install beautifulsoup4 google py-stackexchange
+
 echo "Install complete"
