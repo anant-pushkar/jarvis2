@@ -109,7 +109,7 @@ class JarvisTester:
 		if(e_list[0] == "?"):
 			print "Showing output for " + instance.description
 			print utils.get_color("yellow")
-			if len(e_list)>2 and e_list[2] != "false" : 
+			if len(e_list)<=2 or e_list[2] != "false" : 
 				print "input : " 
 				print instance.inputStr
 			print "output : "

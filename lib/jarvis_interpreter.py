@@ -32,8 +32,8 @@ class JarvisInterpreter:
 			self.run()
 	
 	def handler(self , signum , frame):
-		print utils.get_color("red") + "Keyboard interrrupt. Signal Number : " + str(signum) + utils.reset_color()
-		print utils.get_color("white" , -1 , "b") + self.prompt + utils.reset_color() ,
+		#print utils.get_color("red") + "Keyboard interrrupt. Signal Number : " + str(signum) + utils.reset_color()
+		#print utils.get_color("white" , -1 , "b") + self.prompt + utils.reset_color() ,
 		sys.stdout.flush()
 		
 	def child_handler(self , signum , frame):

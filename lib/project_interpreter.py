@@ -4,7 +4,11 @@ import sys
 import importlib
 import os
 import json
+import subprocess
 import utils
+from  resolver import *
+from DrakSuggestionsFetcher import *
+from inex import *
 
 class JarvisProjectInterpreter(jarvis.JarvisInterpreter):
 	
@@ -13,7 +17,33 @@ class JarvisProjectInterpreter(jarvis.JarvisInterpreter):
 		self.project = prj
 		self.add_project_triggers()
 		self.prompt  = "Jarvis ~/" + prj.name + "$ "
-		
+	
+	def __extract_text__(self , path):
+		logs = open("./" + path,"rb").readlines()
+		resolver = DrakeImmediateResolver(logs,["." , "jarvis" , "scripts" , "test"])
+	
+		result = {}
+		result["immediate"] = resolver.get_suggestion()#["suggestion"]
+		result["web"]  = resolver.get_keywords()
+		return result
+	
+	def __run_drak__(self , filename):
+		text_extract = self.__extract_text__(filename)
+		if len(text_extract["immediate"]["suggestion"])!=0:
+			print utils.get_color("blue") + "Immediately resolvable Issues detected" + utils.reset_color()
+			for suggestion in text_extract["immediate"]["suggestion"]:
+				print utils.get_color("yellow") + suggestion + utils.reset_color()
+				
+		response = str(raw_input(utils.get_color("blue") + "Would you like to search online for better suggestions?[Y/N]" + utils.reset_color())).lower()
+		if response == "y":
+			app = DrakSuggestionFetcher()
+
+			web_result = []
+			for keyword in text_extract["web"] + text_extract["immediate"]["keyword"]:
+				web_result += app.get_suggestions(keyword, 10)
+			ob = Inex()
+			print utils.get_color("blue") + "Dr Drak Suggests : " + utils.reset_color()
+			print utils.get_color("yellow") + ob.processInput(web_result , False) + utils.reset_color()
 	def  add_project_triggers(self):
 		self.add_files()
 		
@@ -24,7 +54,7 @@ class JarvisProjectInterpreter(jarvis.JarvisInterpreter):
 		self.add_trigger("run" , run_project , help_text="Run the current project")
 		
 		def debug_project(arg):
-			sin = 0 if len(arg)<1 else arg[0	]
+			sin = 0 if len(arg)<1 else arg[0]
 			sout= 0 if len(arg)<2 else arg[1]
 			self.project.debug(sin , sout)
 		self.add_trigger("debug" , debug_project , help_text="Run project in debug mode")
@@ -40,6 +70,29 @@ class JarvisProjectInterpreter(jarvis.JarvisInterpreter):
 			jarvistester = tester.JarvisTester(self.project)
 			jarvistester.test()
 		self.add_trigger("test" , test_project , help_text="Test Project")
+		
+		def drak_fixit(arg):
+			if not os.path.isdir("./logs"):
+				print utils.get_color("yellow") + "Creating log folder" + utils.reset_color()
+				os.mkdir("./logs")
+				
+			self.project.build(err = open('logs/build_error', 'w'))
+			if os.stat('logs/build_error').st_size > 1:
+				print utils.get_color("red") + "Build Error Encountered" + utils.reset_color()
+				print utils.get_color("blue") + "Analyzing for possible Build Errors" + utils.reset_color()
+				self.__run_drak__('logs/build_error')
+			
+			self.project.run(err = open('logs/run_error', 'w'))
+			if os.stat('logs/run_error').st_size > 1:
+				print utils.get_color("red" , attr="b") + "Run Time Error Encountered" + utils.reset_color()
+				print utils.get_color("blue") + "Analyzing for possible Run Errors" + utils.reset_color()
+				self.__run_drak__('logs/run_error')
+			
+			os.remove('logs/build_error')
+			os.remove('logs/run_error')
+			
+		self.add_trigger("drak_fixit" , drak_fixit , help_text="Use Drak to resolve dependency Issues")
+			
 		
 		def install_dependency(arg):
 			self.project.install_dependency()

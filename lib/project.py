@@ -44,11 +44,11 @@ class JarvisProject:
 		print "Debug File : " + self.debugfile
 		print "Run File   : " + self.runfile
 	
-	def build(self):
+	def build(self , err=sys.stderr):
 		self.warn_for_dependency()
 		print utils.get_color("blue" , -1 , "b") + "Building Project...\n" + utils.reset_color()
 		try:
-			utils.run_script("scripts/" + self.buildfile , verbose = self.set_verbose)
+			utils.run_script("scripts/" + self.buildfile , verbose = self.set_verbose , serr=err)
 		except Exception as err:
 			print err
 		print utils.get_color("blue" , -1 , "b") + "Build Complete" + utils.reset_color()
@@ -65,12 +65,12 @@ class JarvisProject:
 			sin=alter_stream
 		return sin
 	
-	def run(self , iname=0 , oname=0):
+	def run(self , iname=0 , oname=0 , err=sys.stderr):
 		sin = self.get_file(iname , sys.stdin)
 		sout= self.get_file(oname , sys.stdout , "w")
 		print utils.get_color("blue" , -1 , "b") + "Running Project...\n" + utils.reset_color()
 		try:
-			utils.run_script("scripts/" + self.runfile , True , sin , sout , verbose = self.set_verbose)
+			utils.run_script("scripts/" + self.runfile , True , sin , sout , verbose = self.set_verbose , serr = err)
 		except Exception as err:
 			print err.args
 		print utils.get_color("blue" , -1 , "b") + "Run Complete" + utils.reset_color()

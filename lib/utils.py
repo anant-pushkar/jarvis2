@@ -36,7 +36,7 @@ def sanitise(content,data):
 		content = content.replace("{"+key+"}" , data[key])
 	return content
 
-def run_script(filename , highlight=False , sin=sys.stdin , sout=sys.stdout , verbose=True):
+def run_script(filename , highlight=False , sin=sys.stdin , sout=sys.stdout , verbose=True , serr=sys.stderr):
 	start = time.time()
 	
 	fptr = open(filename)
@@ -52,7 +52,7 @@ def run_script(filename , highlight=False , sin=sys.stdin , sout=sys.stdout , ve
 		sys.stderr.flush()
 		
 		try:
-			subprocess.call(["bash" , "-c" , script] , stdin=sin , stdout=sout)
+			subprocess.call(["bash" , "-c" , script] , stdin=sin , stdout=sout , stderr=serr)
 		except:
 			raise Exception()
 		
