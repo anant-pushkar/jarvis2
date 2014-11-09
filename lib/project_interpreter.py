@@ -33,17 +33,17 @@ class JarvisProjectInterpreter(jarvis.JarvisInterpreter):
 			print utils.get_color("blue") + "Immediately resolvable Issues detected" + utils.reset_color()
 			for suggestion in text_extract["immediate"]["suggestion"]:
 				print utils.get_color("yellow") + suggestion + utils.reset_color()
-				
-		response = str(raw_input(utils.get_color("blue") + "Would you like to search online for better suggestions?[Y/N]" + utils.reset_color())).lower()
-		if response == "y":
-			app = DrakSuggestionFetcher()
+		if len(text_extract["web"]) + len(text_extract["immediate"]["keyword"])!=0:
+			response = str(raw_input(utils.get_color("blue") + "Would you like to search online for better suggestions?[Y/N]" + utils.reset_color())).lower()
+			if response == "y":
+				app = DrakSuggestionFetcher()
 
-			web_result = []
-			for keyword in text_extract["web"] + text_extract["immediate"]["keyword"]:
-				web_result += app.get_suggestions(keyword, 10)
-			ob = Inex()
-			print utils.get_color("blue") + "Dr Drak Suggests : " + utils.reset_color()
-			print utils.get_color("yellow") + ob.processInput(web_result , False) + utils.reset_color()
+				web_result = []
+				for keyword in text_extract["web"] + text_extract["immediate"]["keyword"]:
+					web_result += app.get_suggestions(keyword, 10)
+				ob = Inex()
+				print utils.get_color("blue") + "Dr Drak Suggests : " + utils.reset_color()
+				print utils.get_color("yellow") + ob.processInput(web_result , False) + utils.reset_color()
 	def  add_project_triggers(self):
 		self.add_files()
 		
@@ -82,14 +82,19 @@ class JarvisProjectInterpreter(jarvis.JarvisInterpreter):
 				print utils.get_color("blue") + "Analyzing for possible Build Errors" + utils.reset_color()
 				self.__run_drak__('logs/build_error')
 			
-			self.project.run(err = open('logs/run_error', 'w'))
-			if os.stat('logs/run_error').st_size > 1:
-				print utils.get_color("red" , attr="b") + "Run Time Error Encountered" + utils.reset_color()
-				print utils.get_color("blue") + "Analyzing for possible Run Errors" + utils.reset_color()
-				self.__run_drak__('logs/run_error')
+			tester = importlib.import_module("tester")
+			jarvistester = tester.JarvisTester(self.project)
 			
-			os.remove('logs/build_error')
-			os.remove('logs/run_error')
+			jarvistester.tests = importlib.import_module("testCases").getTests()
+			jarvistester.build()
+			for i in range(len(jarvistester.tests)):
+				print utils.get_color("blue") + "Running " + jarvistester.tests[i].description + utils.reset_color()
+				self.project.run(err = open('logs/run_error'+str(i), 'w') , iname = jarvistester.tests[i].description.replace(" ","_"))
+				if os.stat('logs/run_error'+str(i)).st_size > 1:
+					print utils.get_color("red" , attr="b") + "Run Time Error Encountered" + utils.reset_color()
+					print utils.get_color("blue") + "Analyzing for possible Run Errors" + utils.reset_color()
+					self.__run_drak__('logs/run_error'+str(i))
+			print utils.get_color("blue") + "DRAK diagnostics complete" + utils.reset_color()
 			
 		self.add_trigger("drak_fixit" , drak_fixit , help_text="Use Drak to resolve dependency Issues")
 			
