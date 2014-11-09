@@ -32,7 +32,7 @@ class SummaryExtractor(Extractor):    #works only for strings. Please don't send
         maxWeight = -1
         function = None
         for funcname, weight in self.rule_lexicon.iteritems():
-			#print '111111111111111',funcname
+			print '',
 			f = getattr(self,funcname)
 			if weight>maxWeight:
 				maxWeight = weight

@@ -1,5 +1,4 @@
 import re
-import nltk
 import sys
 from ClosestWords import *
 import subprocess
@@ -10,7 +9,7 @@ def aptitude_search(module):
 	output = subprocess.check_output(["aptitude","search",module])
 	suggested_import = []
 	for item in output.split("\n"):
-		x = nltk.word_tokenize(item)
+		x = item.split()
 		if len(x) != 0 :
 			if x[0] == 'p':
 				suggested_import.append(x[1])

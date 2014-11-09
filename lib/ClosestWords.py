@@ -2,7 +2,6 @@ import re
 import sys
 from os import listdir
 import os.path
-import nltk
 from collections import defaultdict
 debug_mode = len(sys.argv)>1 and sys.argv[1]=="DEBUG"
 def debug(msg):
