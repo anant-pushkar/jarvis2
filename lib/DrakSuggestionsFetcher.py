@@ -9,7 +9,6 @@ from xml.parsers.expat import ExpatError
 import urlparse
 import re
 from google import search
-import utils
 
 search_keywords = ["pip", "install", "apt-get", "update", "dpkg", "easy_install"]
 
@@ -27,13 +26,22 @@ class DrakAbstractStackApp():
 		pass
 	def get_suggestions(self, questionIds):
 		questionIds = [x for x in questionIds if x.isdigit()]
-
+		
+		
+		if len(questionIds) == 0:
+			return []
+		
 		questions = self.site.questions(questionIds)
 		suggestions = []
 		
-		index = 0
-		for question in questions:
+		index =0
+		for questionId in questionIds:
+			for rand_question in questions:
+				if rand_question.id == int(questionId):
+					question = rand_question
+					break
 			questions_weight = math.exp(-1*0.1*index)
+			
 			suggestions_for_question = self.get_suggestions_for_question(question)
 			max_score_of_suggestions_for_question = 0
 			
@@ -131,9 +139,9 @@ class DrakSuggestionFetcher():
 				pathx = str(path).split('/')
 				question_ids.append(pathx[2])
 		if len(question_ids)!=0:
-			print utils.get_color("white") + "#DRAK : Fetched Stackoverflow Questions\n#DRAK : Fetching answers" + utils.reset_color()
+			print  "#DRAK : Fetched Stackoverflow Questions\n#DRAK : Fetching answers" 
 			suggestions.extend(self.so.get_suggestions(question_ids))
-			print utils.get_color("white") + "#DRAK : Answers fetched successfully" + utils.reset_color()
+			print "#DRAK : Answers fetched successfully" 
 		question_ids = []
 		for url in search(askubuntu_query, tld='es', lang='en', stop=5):
 			hostname = urlparse.urlparse(url).hostname
@@ -142,9 +150,9 @@ class DrakSuggestionFetcher():
 				pathx = str(path).split('/')
 				question_ids.append(pathx[2])
 		if len(question_ids)!=0:
-			print utils.get_color("white") + "#DRAK : Fetched AskUbuntu Questions\n#DRAK : Fetching answers" + utils.reset_color()
+			print  "#DRAK : Fetched AskUbuntu Questions\n#DRAK : Fetching answers" 
 			suggestions.extend(self.au.get_suggestions(question_ids))
-			print utils.get_color("white") + "#DRAK : Answers fetched successfully" + utils.reset_color()
+			print  "#DRAK : Answers fetched successfully" 
 		
 		for suggestion in suggestions:
 			suggestion.keyword_confidence = keyword_confidence
@@ -152,7 +160,8 @@ class DrakSuggestionFetcher():
 '''
 if __name__ == "__main__":
 	app = DrakSuggestionFetcher()
-	for suggestion in app.get_suggestions(raw_input("Enter key to be searched: "), 10):
+	#for suggestion in app.get_suggestions(raw_input("Enter key to be searched: "), 10):
+	for suggestion in app.get_suggestions("igraph/arpack.h: No such file or directory", 10):
 		for code in suggestion.codes:
 			print code
 		print suggestion.confidence
